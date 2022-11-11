@@ -1,76 +1,72 @@
-CREATE DATABASE semi;
-
 USE semi;
+commit;
 
+/***** member *****/
+/***** member *****/
+/***** member *****/
+/***** member *****/
+/***** member *****/
 DROP TABLE member;
 CREATE TABLE member(
 	id         VARCHAR(30) PRIMARY KEY,
 	pwd        VARCHAR(30),
 	name       VARCHAR(30),
-	gender     VARCHAR(10),
+	gender     VARCHAR(10) CHECK(gender IN('f', 'm')),
 	age        INT,
 	postalCode VARCHAR(10),
-	address1   VARCHAR(50),
+	address1   VARCHAR(30),
 	address2   VARCHAR(50),
-	phone      VARCHAR(30),
-	email      VARCHAR(50),
+	phone      VARCHAR(30) UNIQUE,
+	email      VARCHAR(30) UNIQUE,
 	point      INT         DEFAULT 0
 );
-DROP PROCEDURE memberP;
-CREATE PROCEDURE memberP()
+
+DROP PROCEDURE memberAdmin;
+CREATE PROCEDURE memberAdmin()
 BEGIN
 	DECLARE cnt INT DEFAULT 1;
 	
 	here : LOOP
 		INSERT INTO member(id, pwd, name, gender, age, postalCode, address1, address2, phone, email)
-		VALUES(CONCAT('c00',cnt), '1111', 'hong', 'm', '15', '11111', '서울', '서울대입구', '010-1111', 'abc@naver.com');
+		VALUES('admin', '1111', 'tester', 'm', 30, '11111', '서울', '에그옐로우', '010-1111-1111', 'abc@naver.com');
 		
-		IF cnt = 50 THEN
+		IF cnt = 1 THEN
 			LEAVE here;
 		END IF;
 		
 		SET cnt = cnt + 1;
 	END LOOP;
 END;
-CALL memberP();
-SELECT * FROM member;
+CALL memberAdmin();
 
-DROP TABLE orders;
-CREATE TABLE orders(
-	id          VARCHAR(30),
-	category    VARCHAR(30),
-	SERIAL      INT,
-	price       INT,
-	orderNumber INT PRIMARY KEY,
-	orderDate   DATE,
-	status      INT DEFAULT 1
-);
-DROP PROCEDURE ordersP1;
-CREATE PROCEDURE ordersP1()
+DROP PROCEDURE memberM;
+CREATE PROCEDURE memberM()
 BEGIN
 	DECLARE cnt INT DEFAULT 1;
 	
 	here : LOOP
-		INSERT INTO orders(id, category, serial, price, orderNumber, orderDate, status)
-		VALUES(CONCAT('a00',cnt), 'outer', 123, 50000, cnt, '2021-07-28', 1);
+		INSERT INTO member(id, pwd, name, gender, age, postalCode, address1, address2, phone, email)
+		VALUES(CONCAT('m00',cnt), '1111', concat(char(round(rand()*25)+65), char(round(rand()*25)+97), char(round(rand()*25)+97), char(round(rand()*25)+97), char(round(rand()*25)+97), char(round(rand()*25)+97), char(round(rand()*25)+97), char(round(rand()*25)+97)),
+			   'm', FLOOR(RAND() * 70), ROUND(RAND() * 100000), '서울', '에그옐로우', CONCAT('010-1111-', cnt), CONCAT('abc', cnt, '@naver.com'));
 		
-		IF cnt = 50 THEN
+		IF cnt = 200 THEN
 			LEAVE here;
 		END IF;
 		
 		SET cnt = cnt + 1;
 	END LOOP;
 END;
-CALL ordersP1();
+CALL memberM();
 
-DROP PROCEDURE ordersP2;
-CREATE PROCEDURE ordersP2()
+DROP PROCEDURE memberF;
+CREATE PROCEDURE memberF()
 BEGIN
-	DECLARE cnt INT DEFAULT 51;
+	DECLARE cnt INT DEFAULT 1;
 	
 	here : LOOP
-		INSERT INTO orders(id, category, serial, price, orderNumber, orderDate, status)
-		VALUES(CONCAT('a00',cnt), 'top', 567, 100000, cnt, '2022-10-17', 1);
+		INSERT INTO member(id, pwd, name, gender, age, postalCode, address1, address2, phone, email)
+		VALUES(CONCAT('f00',cnt), '1111', concat(char(round(rand()*25)+65), char(round(rand()*25)+97), char(round(rand()*25)+97), char(round(rand()*25)+97), char(round(rand()*25)+97), char(round(rand()*25)+97), char(round(rand()*25)+97), char(round(rand()*25)+97)),
+			   'f', FLOOR(RAND() * 70), ROUND(RAND() * 100000), '서울', '에그옐로우', CONCAT('010-2222-', cnt), CONCAT('def', cnt, '@naver.com'));
 		
 		IF cnt = 100 THEN
 			LEAVE here;
@@ -79,165 +75,163 @@ BEGIN
 		SET cnt = cnt + 1;
 	END LOOP;
 END;
-CALL ordersP2();
+CALL memberF();
 
-DROP PROCEDURE ordersP3;
-CREATE PROCEDURE ordersP3()
+SELECT * FROM member;
+SELECT * FROM orders;
+SELECT * FROM products;
+
+/***** orders *****/
+/***** orders *****/
+/***** orders *****/
+/***** orders *****/
+/***** orders *****/
+DROP TABLE orders;
+CREATE TABLE orders(
+	id          VARCHAR(30),
+	category    VARCHAR(30),
+	SERIAL      INT,
+	productName VARCHAR(50),
+	price       INT,
+	orderNumber INT AUTO_INCREMENT PRIMARY KEY,
+	orderDate   DATE,
+	status      INT DEFAULT 1
+);
+
+DROP PROCEDURE ordersOuter;
+CREATE PROCEDURE ordersOuter()
 BEGIN
-	DECLARE cnt INT DEFAULT 101;
+	DECLARE cnt INT DEFAULT 1;
 	
 	here : LOOP
-		INSERT INTO orders(id, category, serial, price, orderNumber, orderDate, status)
-		VALUES(CONCAT('b00',cnt), 'bottom', 789, 250000, cnt, '2022-11-10', 1);
+		UPDATE orders SET orderDate='2022-11-11'
+		WHERE orderNumber > 700
+		AND orderNumber <= 706;
 		
-		IF cnt = 150 THEN
+		IF cnt = 1 THEN
 			LEAVE here;
 		END IF;
 		
 		SET cnt = cnt + 1;
 	END LOOP;
 END;
-CALL ordersP3();
+CALL ordersOuter();
 
-DROP PROCEDURE ordersP4;
-CREATE PROCEDURE ordersP4()
-BEGIN
-	DECLARE cnt INT DEFAULT 151;
-	
-	here : LOOP
-		INSERT INTO orders(id, category, serial, price, orderNumber, orderDate, status)
-		VALUES(CONCAT('c00',cnt), 'shoes', 456, 8000, cnt, '2020-03-22', 1);
-		
-		IF cnt = 180 THEN
-			LEAVE here;
-		END IF;
-		
-		SET cnt = cnt + 1;
-	END LOOP;
-END;
-CALL ordersP4();
-
-DROP PROCEDURE ordersP5;
-CREATE PROCEDURE ordersP5()
-BEGIN
-	DECLARE cnt INT DEFAULT 181;
-	
-	here : LOOP
-		INSERT INTO orders(id, category, serial, price, orderNumber, orderDate, status)
-		VALUES(CONCAT('c00',cnt), 'acc', 1004, 7600, cnt, '2022-02-10', 1);
-		
-		IF cnt = 250 THEN
-			LEAVE here;
-		END IF;
-		
-		SET cnt = cnt + 1;
-	END LOOP;
-END;
-CALL ordersP5();
 SELECT * FROM orders;
 
+/***** products *****/
+/***** products *****/
+/***** products *****/
+/***** products *****/
+/***** products *****/
 DROP TABLE products;
 CREATE TABLE products(
 	category    VARCHAR(30),
-	SERIAL      INT PRIMARY KEY,
-	productName VARCHAR(30),
+	SERIAL      INT AUTO_INCREMENT PRIMARY KEY,
+	productName VARCHAR(50),
 	price       INT,
 	stock       INT,
-	salesRate   INT
+	salesRate   INT,
+	img         VARCHAR(50)
 );
-DROP PROCEDURE productsP1;
-CREATE PROCEDURE productsP1()
-BEGIN
-	DECLARE cnt INT DEFAULT 1;
-	
-	here : LOOP
-		INSERT INTO products(category, serial, price, stock, salesRate)
-		VALUES('outer', 123, 50000, 500, 253);
-		
-		IF cnt = 1 THEN
-			LEAVE here;
-		END IF;
-		
-		SET cnt = cnt + 1;
-	END LOOP;
-END;
-CALL productsP1();
 
-DROP PROCEDURE productsP2;
-CREATE PROCEDURE productsP2()
+DROP PROCEDURE productsOuter;
+CREATE PROCEDURE productsOuter()
 BEGIN
 	DECLARE cnt INT DEFAULT 1;
 	
 	here : LOOP
-		INSERT INTO products(category, serial, price, stock, salesRate)
-		VALUES('top', 567, 100000, 300, 650);
+		INSERT INTO products(category, productName, price, stock, salesRate, img)
+		VALUES('outer', CONCAT('outer', cnt), ROUND(RAND() * 1000000, -3), FLOOR(RAND() * 500), FLOOR(RAND() * 100), CONCAT('outer', cnt));
 		
-		IF cnt = 1 THEN
+		IF cnt = 70 THEN
 			LEAVE here;
 		END IF;
 		
 		SET cnt = cnt + 1;
 	END LOOP;
 END;
-CALL productsP2();
+CALL productsOuter();
 
-DROP PROCEDURE productsP3;
-CREATE PROCEDURE productsP3()
+DROP PROCEDURE productsTop;
+CREATE PROCEDURE productsTop()
 BEGIN
 	DECLARE cnt INT DEFAULT 1;
 	
 	here : LOOP
-		INSERT INTO products(category, serial, price, stock, salesRate)
-		VALUES('bottom', 789, 8000, 1200, 800);
+		INSERT INTO products(category, productName, price, stock, salesRate, img)
+		VALUES('top', CONCAT('top', cnt), ROUND(RAND() * 1000000, -3), FLOOR(RAND() * 500), FLOOR(RAND() * 100), CONCAT('top', cnt));
 		
-		IF cnt = 1 THEN
+		IF cnt = 70 THEN
 			LEAVE here;
 		END IF;
 		
 		SET cnt = cnt + 1;
 	END LOOP;
 END;
-CALL productsP3();
+CALL productsTop();
 
-DROP PROCEDURE productsP4;
-CREATE PROCEDURE productsP4()
+DROP PROCEDURE productsBottom;
+CREATE PROCEDURE productsBottom()
 BEGIN
 	DECLARE cnt INT DEFAULT 1;
 	
 	here : LOOP
-		INSERT INTO products(category, serial, price, stock, salesRate)
-		VALUES('shoes', 456, 8000, 128, 780);
+		INSERT INTO products(category, productName, price, stock, salesRate, img)
+		VALUES('bottom', CONCAT('bottom', cnt), ROUND(RAND() * 1000000, -3), FLOOR(RAND() * 500), FLOOR(RAND() * 100), CONCAT('bottom', cnt));
 		
-		IF cnt = 1 THEN
+		IF cnt = 70 THEN
 			LEAVE here;
 		END IF;
 		
 		SET cnt = cnt + 1;
 	END LOOP;
 END;
-CALL productsP4();
+CALL productsBottom();
 
-DROP PROCEDURE productsP5;
-CREATE PROCEDURE productsP5()
+DROP PROCEDURE productsShoes;
+CREATE PROCEDURE productsShoes()
 BEGIN
 	DECLARE cnt INT DEFAULT 1;
 	
 	here : LOOP
-		INSERT INTO products(category, serial, price, stock, salesRate)
-		VALUES('acc', 1005, 7600, 999, 555);
+		INSERT INTO products(category, productName, price, stock, salesRate, img)
+		VALUES('shoes', CONCAT('shoes', cnt), ROUND(RAND() * 1000000, -3), FLOOR(RAND() * 500), FLOOR(RAND() * 100), CONCAT('shoes', cnt));
 		
-		IF cnt = 1 THEN
+		IF cnt = 70 THEN
 			LEAVE here;
 		END IF;
 		
 		SET cnt = cnt + 1;
 	END LOOP;
 END;
-CALL productsP5();
+CALL productsShoes();
+
+DROP PROCEDURE productsAcc;
+CREATE PROCEDURE productsAcc()
+BEGIN
+	DECLARE cnt INT DEFAULT 1;
+	
+	here : LOOP
+		INSERT INTO products(category, productName, price, stock, salesRate, img)
+		VALUES('acc', CONCAT('acc', cnt), ROUND(RAND() * 1000000, -3), FLOOR(RAND() * 500), FLOOR(RAND() * 100), CONCAT('acc', cnt));
+		
+		IF cnt = 70 THEN
+			LEAVE here;
+		END IF;
+		
+		SET cnt = cnt + 1;
+	END LOOP;
+END;
+CALL productsAcc();
+
 SELECT * FROM products;
 
 
 
+
+
+/***** 쿼리문 *****/
 SELECT SERIAL FROM products ORDER BY salesRate DESC LIMIT 3; ##  ***(1) 인덱스 메인 베스트10
 select * from member where id='a001'; ## ***(2) 내정보보기
 DELETE from member where id='a001' AND pwd='1111'; ## ***(3) 회원탈퇴
@@ -280,6 +274,6 @@ SELECT sum(price) FROM orders WHERE id='a005' AND year(orderDate)=2021; ## ***(2
 UPDATE orders SET STATUS = 4 WHERE orderNumber=25; ## ***(30) 마이페이지 내주문보기에서 리스트 선택시 환불요청
 UPDATE products SET salesRate=(salesRate+1) WHERE serial=1004; ## ***(31) 주문완료시 해당상품 판매량+1
 
-
-
-
+commit;
+SELECT * FROM member WHERE id='0000aaa';
+SELECT * FROM member WHERE id='0000bbb';
