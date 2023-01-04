@@ -634,6 +634,3 @@ GROUP BY DATE_FORMAT(pixel_buy_date,'%Y-%m-%d');
 
 
 
-
-
-
