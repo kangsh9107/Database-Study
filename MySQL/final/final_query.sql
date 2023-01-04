@@ -556,10 +556,77 @@ FROM member m JOIN member_introduce mi ON m.id = mi.id
 WHERE m.id = 'a001';
 
 ##### 43. mantoman_index.jsp/mantoman_chatlist.jsp
-# 세션 아이디를 기준으로 your_id를 List<vo>에 담고 배열 길이만큼 반복문 실행
-SELECT your_id, filetime FROM mantoman WHERE id = 'a001';
-# 반복문에서 실행할 SQL문
-SELECT profile_img, nickname FROM member WHERE id = '파라미터';
+# 세션 아이디를 기준으로 지난 대화 리스트에 들어갈 상대 아이디, 닉네임, 시간 출력
+SELECT mtm.your_id, m.nickname
+FROM mantoman mtm JOIN member m ON mtm.your_id = m.id
+WHERE id = 'a001';
+
+# 우선 대화마다 테이블에 저장. 고도화때 txt파일로 만드는 것 고려.
+INSERT INTO mantoman(id, your_id, docfile, mantoman_pixel_reward)
+VALUES();
+
+##### 44. index.jsp/mypage.jsp/mypage_quit.jsp
+# 아이디 입력칸에 세션아이디 자동 입력하고 readOnly
+
+
+
+
+
+# $$$$$ 45. admin_index.jsp/admin_total_board.jsp 통합 게시물 출력
+SELECT sno, boardtype, subject, nickname, nal, viewcount FROM board ORDER BY sno DESC;
+
+# $$$$$ 46. admin_index.jsp/admin_member_list.jsp
+SELECT id, email, nickname, join_date FROM member ORDER BY join_date DESC;
+
+# $$$$$ 47. admin_index.jsp/admin_member_list_update.jsp 멤버리스트 클릭 시 정보 수정 가능
+SELECT m.profile_img, m.nickname, m.grade,
+       mi.introduce
+FROM member m JOIN member_introduce mi ON m.id = mi.id
+WHERE m.id = 'a001';
+
+# $$$$$ 48. admin_index.jsp/admin_corp_certification.jsp
+# 기업리스트에서 기업 클릭 시 해당 기업의 정보가 위의 폼에 입력된다.
+SELECT corp_name, manager_name, manager_phone FROM coperation;
+
+# $$$$$ 49. admin_index.jsp/admin_ban.jsp 정지 사유는 고도화때 테이블분리 등 생각해보기.
+SELECT id, nickname, ban_status FROM member;
+
+# $$$$$ 50. admin_index.jsp/admin_pixel_exchange.jsp 수수료 계산은 TEXT box에 있는거로 자바에서 계산
+SELECT m.id, m.grade, b.account, pel.apply_pixel, pel.apply_date 
+FROM member m JOIN bank b                 ON m.id = b.id
+              JOIN pixel_exchage_list pel ON m.id = pel.id;
+
+# $$$$$ 51. admin_index.jsp/admin_exchange_rate.jsp
+SELECT normal, personal, plus, partner FROM pixel_exchange_rate;
+
+UPDATE pixel_exchange_rate SET normal = '파라미터', personal = '파라미터',
+                               plus = '파라미터'  , partner = '파라미터';
+
+# $$$$$ 52. admin_index.jsp/admin_chart_board.jsp
+# 일자별 게시물
+SELECT DATE_FORMAT(nal,'%Y-%m-%d'), count(sno) FROM board GROUP BY DATE_FORMAT(nal,'%Y-%m-%d');
+# 일자별 댓글
+SELECT DATE_FORMAT(repl_nal,'%Y-%m-%d'), count(repl_sno) FROM repl GROUP BY DATE_FORMAT(repl_nal,'%Y-%m-%d');
+
+# $$$$$ 53. admin_index.jsp/admin_chart_member.jsp
+# 성별 통계
+SELECT count(id) FROM member WHERE gender = 'm';
+SELECT count(id) FROM member WHERE gender = 'f';
+# 연령대 통계
+SELECT count(id) FROM member WHERE age >=10 AND age <20;
+SELECT count(id) FROM member WHERE age >=20 AND age <30;
+SELECT count(id) FROM member WHERE age >=30 AND age <40;
+SELECT count(id) FROM member WHERE age >=40 AND age <50;
+
+# $$$$$ 54. admin_index.jsp/admin_chart_pixel.jsp
+# 일자별 승인 완료 환전 금액 총합
+SELECT SUM(apply_pixel), DATE_FORMAT(apply_date,'%Y-%m-%d')
+FROM pixel_exchange_list WHERE pixel_exchange_status = 1
+GROUP BY DATE_FORMAT(apply_date,'%Y-%m-%d');
+# 일자별 판매된 픽셀의 금액 총합
+SELECT SUM(pixel_buy_amount), DATE_FORMAT(pixel_buy_date,'%Y-%m-%d')
+FROM pixel_buy_list
+GROUP BY DATE_FORMAT(pixel_buy_date,'%Y-%m-%d');
 
 
 
