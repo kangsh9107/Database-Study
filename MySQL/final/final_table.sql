@@ -450,3 +450,5 @@ ALTER TABLE pixel_buy_list ADD CONSTRAINT FK_member_TO_pixel_buy_list_1 FOREIGN 
 REFERENCES member (
 	id
 );
+
+COMMIT;
