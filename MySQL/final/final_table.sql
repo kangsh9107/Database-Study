@@ -64,6 +64,11 @@ CREATE TABLE mansearch_board (
 	deadline	date	NULL
 );
 
+ALTER TABLE member ADD corp_status INT NOT NULL;
+ALTER TABLE member MODIFY corp_status INT DEFAULT 0;
+ALTER TABLE mansearch_board ADD main_task VARCHAR(255);
+ALTER TABLE mansearch_board ADD sub_task VARCHAR(255);
+
 CREATE TABLE freetalking_board (
 	freetalking_sno	int	NOT NULL,
 	sno	int	NOT NULL,
