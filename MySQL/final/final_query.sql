@@ -21,6 +21,8 @@ SELECT id, (thumbup-thumbdown), viewcount FROM board
 ORDER BY (thumbup-thumbdown) DESC, viewcount DESC LIMIT 0,5; # 1차 추천수, 2차 조회수
 SELECT id FROM board GROUP BY id
 ORDER BY count(id) DESC, id ASC LIMIT 0,5; # 게시글 많이 쓴 수
+SELECT b.id, m.profile_img FROM board b JOIN member m ON b.id = m.id
+GROUP BY b.id ORDER BY count(b.id) DESC, b.id ASC LIMIT 0,5; # TOP WRITER
 
 ##### 3. index.jsp 투데이 멘토랭킹. txt파일을 가장 많이 생성한 멘토. 퍼스널멘토는 랭킹집계 X
 SELECT count(docfile) FROM mantoman mm JOIN board b ON mm.id = b.id
@@ -28,10 +30,10 @@ WHERE b.grade = 'plus' OR b.grade = 'partner' LIMIT 0,5;
 
 ##### 4. index.jsp/main.jsp 최신 QnA 게시글 5개
 SELECT b.sno, b.id, b.nal, b.subject, (b.thumbup-b.thumbdown), count(r.repl_sno)
-FROM board b JOIN repl r ON b.sno = r.sno
+FROM board b LEFT JOIN repl r ON b.sno = r.sno
 WHERE b.boardtype = 'QnA'
 GROUP BY b.sno, b.id, b.nal, b.subject, (b.thumbup-b.thumbdown)
-ORDER BY b.nal DESC LIMIT 0,5;
+ORDER BY b.sno DESC LIMIT 0,5;
 
 ##### 5. index.jsp/main.jsp 투데이 Best 게시글
 SELECT b.sno, b.id, b.nal, b.subject, (b.thumbup-b.thumbdown), b.viewcount, count(r.repl_sno)

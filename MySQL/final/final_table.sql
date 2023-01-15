@@ -457,3 +457,14 @@ REFERENCES member (
 );
 
 COMMIT;
+
+CREATE TABLE `chat` (
+	`chat_sno`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	`id`	varchar(255)	NOT NULL,
+	`chat_status`	int	NOT NULL	DEFAULT 0
+);
+
+
+SELECT * FROM chat;
+commit;
+TRUNCATE TABLE chat;
