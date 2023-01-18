@@ -20,7 +20,8 @@ DELETE FROM chat WHERE id = #{_parameter}
 
 ## TOP WRITER
 SELECT b.id, m.profile_img FROM board b JOIN member m ON b.id = m.id
-GROUP BY b.id ORDER BY COUNT(b.id) DESC, b.id ASC LIMIT 0,5
+WHERE nal BETWEEN DATE_ADD(NOW(),INTERVAL -1 WEEK ) AND NOW()
+GROUP BY b.id ORDER BY COUNT(b.id) DESC, b.id ASC LIMIT 0,5;
 
 ## HOT TAG
 SELECT hashtag FROM board
@@ -155,30 +156,19 @@ LIMIT ${startNo}, ${listSize}
 
 */
 
-SELECT COUNT(b.sno) AS totSize, b.boardtype, qb.qna_horsehead AS horsehead
+SELECT b.sno, b.boardtype, b.nal, b.subject, b.doc, b.hashtag, b.viewcount,
+	   b.thumbup, b.thumbdown, (b.thumbup-b.thumbdown) AS thumb, board_delete,
+       m.id, m.nickname, m.profile_img, qb.qna_horsehead AS horsehead,
+       COUNT(r.repl_sno) AS countRepl
 FROM board b LEFT JOIN member m     ON b.id = m.id
+             LEFT JOIN repl r       ON b.sno = r.sno
              LEFT JOIN qna_board qb ON b.sno = qb.sno
-WHERE m.nickname LIKE '%%'
-OR    b.hashtag  LIKE '%%'
-OR    b.subject  LIKE '%%'
-OR    b.doc      LIKE '%%'
-GROUP BY b.boardtype, qb.qna_horsehead
-HAVING b.boardtype = 'qna';
+WHERE b.hashtag  LIKE '%#프론트엔드%'
+GROUP BY b.sno, b.boardtype, b.nal, b.subject, b.doc, b.hashtag, b.viewcount,
+		 b.thumbup, b.thumbdown, thumb, board_delete,
+		 m.id, m.nickname, m.profile_img, qb.qna_horsehead;
 
 
-
-
-
-
-SELECT * FROM board ORDER BY sno DESC;
-INSERT INTO board(id,boardtype,nal,subject,doc,hashtag,viewcount,thumbup,thumbdown)
-VALUES('m0011','qna',NOW(),'테스트3','테스트DOC2','#테스트#화이팅',777,7,0);
-
-INSERT INTO qna_board(qna_sno,sno,qna_pixel_reward,qna_horsehead) VALUES(2,1804,600,'커리어');
-INSERT INTO qna_board(qna_sno,sno,qna_pixel_reward,qna_horsehead) VALUES(3,1805,700,'기타');
-
-SELECT * FROM board WHERE boardtype='qna';
-SELECT * FROM qna_board;
 commit;
 /****************************** 데이터추가
 

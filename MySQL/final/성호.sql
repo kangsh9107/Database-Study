@@ -10,3 +10,6 @@ insert into repl(id,sno,grp,seq,deep,repl_nal,repl_doc) values('m0014',3,   2,  
 select * from repl;
 delete from repl;
 commit;
+
+##시연용 픽셀환전수수료 더미데이터
+insert into pixel_exchange_rate values(60,70,80,90);
