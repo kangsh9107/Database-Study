@@ -107,12 +107,13 @@ CREATE TABLE `repl_selected` (
 CREATE TABLE `premium_review` (
 	`premium_review_sno`	int	NOT NULL,
 	`mansearch_sno`	int	NOT NULL,
+	`id`	varchar(255)	NOT NULL,
 	`review`	longtext	NOT NULL
 );
 
 CREATE TABLE `premium_review_buylist` (
 	`id`	varchar(255)	NOT NULL,
-	`review_sno`	int	NOT NULL
+	`premium_review_sno`	int	NOT NULL
 );
 
 CREATE TABLE `infoshare_board` (
@@ -128,17 +129,6 @@ CREATE TABLE `pixel_exchange_rate` (
 	`partner`	decimal(10,2)	NOT NULL
 );
 
-CREATE TABLE `mantoman` (
-	`mantoman_sno`	int	NOT NULL,
-	`id`	varchar(255)	NOT NULL,
-	`your_id`	varchar(255)	NOT NULL,
-	`doc`	longtext	NOT NULL,
-	`last_talktime`	datetime	NOT NULL	DEFAULT NOW(),
-	`last_talk`	varchar(255)	NOT NULL,
-	`mantoman_pixel_reward`	int	NOT NULL,
-	`roomCode`	varchar(255)	NOT NULL
-);
-
 CREATE TABLE `pixel_price` (
 	`pixel_1_price`	int	NOT NULL	DEFAULT 1000,
 	`pixel_1_amount`	int	NOT NULL	DEFAULT 100,
@@ -152,13 +142,6 @@ CREATE TABLE `pixel_price` (
 	`pixel_5_amount`	int	NOT NULL	DEFAULT 3000,
 	`pixel_6_price`	int	NOT NULL	DEFAULT 45000,
 	`pixel_6_amount`	int	NOT NULL	DEFAULT 5000
-);
-
-CREATE TABLE `mantoman_att` (
-	`mantoman_sno`	int	NOT NULL,
-	`file_sno`	int	NOT NULL,
-	`sysfile`	varchar(255)	NOT NULL,
-	`orifile`	varchar(255)	NOT NULL
 );
 
 CREATE TABLE `notification_board` (
@@ -221,6 +204,26 @@ CREATE TABLE `ban_history` (
 	`ban_date`	datetime	NOT NULL	DEFAULT NOW()
 );
 
+CREATE TABLE `mantoman_att` (
+	`roomCode`	varchar(255)	NOT NULL,
+	`file_sno`	int	NOT NULL,
+	`sysfile`	varchar(255)	NOT NULL
+);
+
+CREATE TABLE `mantoman` (
+	`roomCode`	varchar(255)	NOT NULL,
+	`id`	varchar(255)	NOT NULL,
+	`your_id`	varchar(255)	NOT NULL
+);
+
+CREATE TABLE `mantoman_room` (
+	`roomCode`	varchar(255)	NOT NULL,
+	`doc`	longtext,
+	`last_talktime`	datetime	NOT NULL	DEFAULT NOW(),
+	`last_talk`	varchar(255),
+	`mantoman_pixel_reward`	int	NOT NULL
+);
+
 
 
 ## 프라이머리키
@@ -256,10 +259,6 @@ ALTER TABLE `infoshare_board` ADD CONSTRAINT `PK_INFOSHARE_BOARD` PRIMARY KEY (
 	`infoshare_sno`
 );
 
-ALTER TABLE `mantoman` ADD CONSTRAINT `PK_MANTOMAN` PRIMARY KEY (
-	`mantoman_sno`
-);
-
 ALTER TABLE `notification_board` ADD CONSTRAINT `PK_NOTIFICATION_BOARD` PRIMARY KEY (
 	`notification_sno`
 );
@@ -284,6 +283,10 @@ ALTER TABLE `chat` ADD CONSTRAINT `PK_CHAT` PRIMARY KEY (
 	`chat_sno`
 );
 
+ALTER TABLE `mantoman_room` ADD CONSTRAINT `PK_MANTOMAN_ROOM` PRIMARY KEY (
+	`roomCode`
+);
+
 
 
 ## 오토인크리먼트
@@ -297,7 +300,6 @@ ALTER TABLE board MODIFY sno INT NOT NULL AUTO_INCREMENT;
 ALTER TABLE mansearch_board MODIFY mansearch_sno INT NOT NULL AUTO_INCREMENT;
 ALTER TABLE premium_review MODIFY premium_review_sno INT NOT NULL AUTO_INCREMENT;
 ALTER TABLE chat MODIFY chat_sno INT NOT NULL AUTO_INCREMENT;
-ALTER TABLE mantoman MODIFY mantoman_sno INT NOT NULL AUTO_INCREMENT;
 ALTER TABLE pixel_exchange_list MODIFY pixel_exchange_list_sno INT NOT NULL AUTO_INCREMENT;
 ALTER TABLE pixel_history MODIFY pixel_history_sno INT NOT NULL AUTO_INCREMENT;
 ALTER TABLE bank MODIFY bank_sno INT NOT NULL AUTO_INCREMENT;
@@ -375,6 +377,13 @@ REFERENCES `mansearch_board` (
 	`mansearch_sno`
 );
 
+ALTER TABLE `premium_review` ADD CONSTRAINT `FK_member_TO_premium_review_1` FOREIGN KEY (
+	`id`
+)
+REFERENCES `member` (
+	`id`
+);
+
 ALTER TABLE `premium_review_buylist` ADD CONSTRAINT `FK_member_TO_premium_review_buylist_1` FOREIGN KEY (
 	`id`
 )
@@ -383,7 +392,7 @@ REFERENCES `member` (
 );
 
 ALTER TABLE `premium_review_buylist` ADD CONSTRAINT `FK_premium_review_TO_premium_review_buylist_1` FOREIGN KEY (
-	`review_sno`
+	`premium_review_sno`
 )
 REFERENCES `premium_review` (
 	`premium_review_sno`
@@ -394,20 +403,6 @@ ALTER TABLE `infoshare_board` ADD CONSTRAINT `FK_board_TO_infoshare_board_1` FOR
 )
 REFERENCES `board` (
 	`sno`
-);
-
-ALTER TABLE `mantoman` ADD CONSTRAINT `FK_member_TO_mantoman_1` FOREIGN KEY (
-	`id`
-)
-REFERENCES `member` (
-	`id`
-);
-
-ALTER TABLE `mantoman_att` ADD CONSTRAINT `FK_mantoman_TO_mantoman_att_1` FOREIGN KEY (
-	`mantoman_sno`
-)
-REFERENCES `mantoman` (
-	`mantoman_sno`
 );
 
 ALTER TABLE `notification_board` ADD CONSTRAINT `FK_board_TO_notification_board_1` FOREIGN KEY (
@@ -473,12 +468,34 @@ REFERENCES `member` (
 	`id`
 );
 
+ALTER TABLE `mantoman_att` ADD CONSTRAINT `FK_mantoman_room_TO_mantoman_att_1` FOREIGN KEY (
+	`roomCode`
+)
+REFERENCES `mantoman_room` (
+	`roomCode`
+);
+
+ALTER TABLE `mantoman` ADD CONSTRAINT `FK_mantoman_room_TO_mantoman_1` FOREIGN KEY (
+	`roomCode`
+)
+REFERENCES `mantoman_room` (
+	`roomCode`
+);
+
+ALTER TABLE `mantoman` ADD CONSTRAINT `FK_member_TO_mantoman_1` FOREIGN KEY (
+	`id`
+)
+REFERENCES `member` (
+	`id`
+);
+
 
 
 ## 유니크
 ALTER TABLE member ADD CONSTRAINT `UQ_member_email` UNIQUE(email);
 ALTER TABLE member ADD CONSTRAINT `UQ_member_nickname` UNIQUE(nickname);
 ALTER TABLE bank ADD CONSTRAINT `UQ_bank_account` UNIQUE(account);
+ALTER TABLE chat ADD CONSTRAINT `UQ_chat_id` UNIQUE(id);
 
 
 
