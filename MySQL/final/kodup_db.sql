@@ -1,7 +1,6 @@
-## member
-## pwd(1111) : sDRLe/gbqtGUc7EVp/uYSQ==
-/*
-CREATE PROCEDURE inputMemberM()
+########## member
+########## pwd 1111 암호화 : sDRLe/gbqtGUc7EVp/uYSQ==
+CREATE PROCEDURE input_member_m()
 BEGIN
 	DECLARE cnt INT DEFAULT 1;
 	
@@ -24,9 +23,9 @@ BEGIN
 		SET cnt = cnt + 1;
 	END LOOP;
 END;
-CALL inputMemberM();
+CALL input_member_m();
 
-CREATE PROCEDURE inputMemberF()
+CREATE PROCEDURE input_member_f()
 BEGIN
 	DECLARE cnt INT DEFAULT 501;
 	
@@ -49,12 +48,10 @@ BEGIN
 		SET cnt = cnt + 1;
 	END LOOP;
 END;
-CALL inputMemberF();
-*/
+CALL input_member_f();
 
-## board
-DROP PROCEDURE inputBoard;
-CREATE PROCEDURE inputBoard()
+########## board
+CREATE PROCEDURE input_board()
 BEGIN
 	DECLARE cnt INT DEFAULT 1;
 	
@@ -73,19 +70,30 @@ BEGIN
 		SET cnt = cnt + 1;
 	END LOOP;
 END;
-CALL inputBoard();
+CALL input_board();
 
-COMMIT;
-SELECT * FROM board;
+########## qna_board
+CREATE PROCEDURE input_qna_board()
+BEGIN
+	DECLARE cnt INT DEFAULT 1;
+	
+	here : LOOP
+		INSERT INTO qna_board(sno, qna_pixel_reward,             qna_horsehead)
+			           VALUES(cnt, 500+(1+FLOOR(RAND()*50))*100, (SELECT * FROM qna_board_horsehead ORDER BY RAND() LIMIT 1));
+		
+		IF cnt = 1000 THEN
+			LEAVE here;
+		END IF;
+		
+		SET cnt = cnt + 1;
+	END LOOP;
+END;
+CALL input_qna_board();
 
-
-SELECT * FROM board WHERE sno = 1001;
-
-SELECT * FROM member;
-
-
-
-
-
-
+CREATE TABLE qna_board_horsehead(
+	horsehead varchar(255)
+);
+INSERT INTO qna_board_horsehead VALUE('기술');
+INSERT INTO qna_board_horsehead VALUE('커리어');
+INSERT INTO qna_board_horsehead VALUE('기타');
 

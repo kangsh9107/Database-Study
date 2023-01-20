@@ -224,6 +224,11 @@ CREATE TABLE `mantoman_room` (
 	`mantoman_pixel_reward`	int	NOT NULL
 );
 
+CREATE TABLE `kodupbudget` (
+	`budget`	int	NULL
+);
+INSERT INTO kodupbudget VALUE(900000000);
+
 
 
 ## 프라이머리키
