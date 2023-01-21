@@ -206,7 +206,6 @@ CREATE TABLE `ban_history` (
 
 CREATE TABLE `mantoman_att` (
 	`roomCode`	varchar(255)	NOT NULL,
-	`file_sno`	int	NOT NULL,
 	`sysfile`	varchar(255)	NOT NULL
 );
 
