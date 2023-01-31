@@ -41,7 +41,8 @@ CREATE TABLE `qna_board` (
 	`qna_sno`	int	NOT NULL,
 	`sno`	int	NOT NULL,
 	`qna_pixel_reward`	int	NOT NULL,
-	`qna_horsehead`	varchar(255)	NOT NULL
+	`qna_horsehead`	varchar(255)	NOT NULL,
+	`qna_status`	int	NOT NULL	DEFAULT 0
 );
 
 CREATE TABLE `mansearch_board` (
@@ -143,6 +144,7 @@ CREATE TABLE `pixel_price` (
 	`pixel_6_price`	int	NOT NULL	DEFAULT 45000,
 	`pixel_6_amount`	int	NOT NULL	DEFAULT 5000
 );
+INSERT INTO pixel_price VALUES(1000,100,2700,300,4500,500,9000,1000,27000,3000,45000,5000);
 
 CREATE TABLE `notification_board` (
 	`notification_sno`	int	NOT NULL,
@@ -223,10 +225,27 @@ CREATE TABLE `mantoman_room` (
 	`mantoman_pixel_reward`	int	NOT NULL
 );
 
+CREATE TABLE `view_board` (
+	`sno`	int	NOT NULL,
+	`id`	varchar(255)	NOT NULL
+);
+
 CREATE TABLE `kodupbudget` (
 	`budget`	int	NULL
 );
 INSERT INTO kodupbudget VALUE(900000000);
+
+CREATE TABLE `countvisitors` (
+	`id`	varchar(255)	NOT NULL,
+	`nal`	datetime	NULL
+);
+
+CREATE TABLE `certification_date` (
+	`id`	varchar(255)	NOT NULL,
+	`certification_category`	varchar(255)	NOT NULL,
+	`apply_date`	datetime	NOT NULL	DEFAULT NOW()
+);
+
 
 
 
@@ -493,6 +512,34 @@ REFERENCES `member` (
 	`id`
 );
 
+ALTER TABLE `view_board` ADD CONSTRAINT `FK_board_TO_view_board_1` FOREIGN KEY (
+	`sno`
+)
+REFERENCES `board` (
+	`sno`
+);
+
+ALTER TABLE `view_board` ADD CONSTRAINT `FK_board_TO_view_board_2` FOREIGN KEY (
+	`id`
+)
+REFERENCES `board` (
+	`id`
+);
+
+ALTER TABLE `countvisitors` ADD CONSTRAINT `FK_member_TO_countvisitors_1` FOREIGN KEY (
+	`id`
+)
+REFERENCES `member` (
+	`id`
+);
+
+ALTER TABLE `certification_date` ADD CONSTRAINT `FK_member_TO_certification_date_1` FOREIGN KEY (
+	`id`
+)
+REFERENCES `member` (
+	`id`
+);
+
 
 
 ## 유니크
@@ -501,6 +548,7 @@ ALTER TABLE member ADD CONSTRAINT `UQ_member_nickname` UNIQUE(nickname);
 ALTER TABLE bank ADD CONSTRAINT `UQ_bank_account` UNIQUE(account);
 ALTER TABLE chat ADD CONSTRAINT `UQ_chat_id` UNIQUE(id);
 
-
-
+## 댓글오류 수정
+DELETE FROM repl_selected;
+DELETE FROM repl;
 COMMIT;

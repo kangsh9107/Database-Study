@@ -230,3 +230,25 @@ SELECT * FROM pixel_history;
 SELECT * FROM pixel_buy_list;
 
 SELECT * FROM member;
+
+
+insert into corperation(id,corp_license,corp_logo,corp_name,corp_phone,corp_email,manager_name,manager_phone,manager_email)
+values ('kodup104','사업자등록증.png','mansearch_view_corp_logo.png','캐빈시스템','010-1111-1111','corp@outlook.com','김담당','010-2222-2222','manager@outlook.com');
+insert into corperation(id,corp_license,corp_logo,corp_name,corp_phone,corp_email,manager_name,manager_phone,manager_email)
+values ('kodup105','사업자등록증.png','mansearch_bluecom.jpg','블루컴','010-1111-1111','bluecom@outlook.com','김담당','010-2222-2222','bluecom1@outlook.com');
+insert into corperation(id,corp_license,corp_logo,corp_name,corp_phone,corp_email,manager_name,manager_phone,manager_email)
+values ('kodup106','사업자등록증.png','mansearch_dabinnetworks.png','다빈네트웍스','010-1111-1111','dabin@outlook.com','김담당','010-2222-2222','dabin1@outlook.com');
+insert into corperation(id,corp_license,corp_logo,corp_name,corp_phone,corp_email,manager_name,manager_phone,manager_email)
+values ('kodup112','사업자등록증.png','mansearch_gspec.Jpg','지스펙','010-1111-1111','gspec@outlook.com','김담당','010-2222-2222','gspec1@outlook.com');
+insert into corperation(id,corp_license,corp_logo,corp_name,corp_phone,corp_email,manager_name,manager_phone,manager_email)
+values ('kodup119','사업자등록증.png','mansearch_itist.jpg','아이티이스트','010-1111-1111','itist@outlook.com','김담당','010-2222-2222','itist1@outlook.com');
+insert into corperation(id,corp_license,corp_logo,corp_name,corp_phone,corp_email,manager_name,manager_phone,manager_email)
+values ('kodup131','사업자등록증.png','mansearch_pilgrimsoft.png','필그림소프트','010-1111-1111','pilgrimsoft@outlook.com','김담당','010-2222-2222','pilgrimsoft1@outlook.com');
+insert into corperation(id,corp_license,corp_logo,corp_name,corp_phone,corp_email,manager_name,manager_phone,manager_email)
+values ('kodup132','사업자등록증.png','mansearch_pni.png','피앤아이','010-1111-1111','pni@outlook.com','김담당','010-2222-2222','pni1@outlook.com');
+insert into corperation(id,corp_license,corp_logo,corp_name,corp_phone,corp_email,manager_name,manager_phone,manager_email)
+values ('kodup135','사업자등록증.png','mansearch_pssoft.png','피에스소프트','010-1111-1111','pssoft@outlook.com','김담당','010-2222-2222','pssoft1@outlook.com');
+insert into corperation(id,corp_license,corp_logo,corp_name,corp_phone,corp_email,manager_name,manager_phone,manager_email)
+values ('kodup139','사업자등록증.png','mansearch_smartfive.png','스마트파이브','010-1111-1111','smartfive@outlook.com','김담당','010-2222-2222','smartfive1@outlook.com');
+insert into corperation(id,corp_license,corp_logo,corp_name,corp_phone,corp_email,manager_name,manager_phone,manager_email)
+values ('kodup141','사업자등록증.png','mansearch_wizinc.png','위즈아이앤씨','010-1111-1111','wizinc@outlook.com','김담당','010-2222-2222','wizinc1@outlook.com');

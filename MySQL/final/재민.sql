@@ -376,3 +376,10 @@ BEGIN
 END;
 CALL repllist2();
 select * from repl;
+
+
+insert into certification_date(id,certification_category,apply_date)
+values("kodup222","corp",now());
+
+insert into certification_date(id,certification_category,apply_date)
+values("kodup438","mento",now());

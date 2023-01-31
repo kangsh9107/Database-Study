@@ -199,5 +199,70 @@ BEGIN
 END;
 CALL input_notification_board();
 
+## repl 더미데이터
+CREATE TABLE test(
+   sno int,
+   id varchar(255)
+);
 
-commit;
+CREATE PROCEDURE replList()
+BEGIN 
+    declare cnt int default 1;
+    here : LOOP 
+       INSERT INTO repl(id, sno, grp, seq, deep, repl_nal, repl_doc, thumbup, thumbdown)
+       VALUES((select id from test order by rand() limit 1),(select sno from test order by rand() limit 1), 0,0,0, FROM_UNIXTIME(FLOOR(unix_timestamp('2022-01-25 00:00:00')+(RAND()*(unix_timestamp('2023-01-25 00:00:00')-unix_timestamp('2022-01-25 00:00:00'))))), '<p>좋은 글이에요~</p>', FLOOR(RAND() * 10),FLOOR(RAND() * 5));
+       IF cnt = 30000 THEN
+           LEAVE here;
+       END IF;
+       SET cnt = cnt + 1;
+    END LOOP;
+END;
+CALL replList();
+
+CREATE PROCEDURE replId()
+BEGIN 
+    declare cnt int default 1001;
+    here : LOOP 
+       UPDATE test SET id = (select id from test order by rand() limit 1)) WHERE sno = cnt;
+       IF cnt = 3400 THEN
+           LEAVE here;
+       END IF;
+       SET cnt = cnt + 1;
+    END LOOP;
+END;
+CALL replId();
+
+ALTER TABLE repl_selected AUTO_INCREMENT=1;
+ALTER TABLE repl AUTO_INCREMENT=1;
+
+CREATE PROCEDURE testSno()
+BEGIN 
+    declare cnt int default 1;
+    here : LOOP 
+       INSERT INTO test(sno, id)
+       VALUES(cnt, concat('kodup',cnt));
+       IF cnt = 1000 THEN
+           LEAVE here;
+       END IF;
+       SET cnt = cnt + 1;
+    END LOOP;
+END;
+CALL testSno();
+
+CREATE PROCEDURE testSno2()
+BEGIN 
+    declare cnt int default 1001;
+    here : LOOP 
+       INSERT INTO test(sno)
+       VALUES(cnt);
+       IF cnt = 3400 THEN
+           LEAVE here;
+       END IF;
+       SET cnt = cnt + 1;
+    END LOOP;
+END;
+CALL testSno2();
+
+
+
+
